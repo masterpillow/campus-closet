@@ -1,0 +1,36 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f5f5f5;
+    color: #333;
+  }
+  
+  header {
+    background-color: #3c6e71;
+    color: white;
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  main {
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .cta {
+    background-color: #3c6e71;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  footer {
+    background: #3c6e71;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+  }
+  
