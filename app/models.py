@@ -9,6 +9,8 @@ class User(db.Model):
 # Note to team: These methods allow us to safely store and check user passwords 
     # using hashing instead of plain text. Used in signup/login routes.
     # Hash the password before storing it in the database
+    #Secure user model for login/signup feature – comment added to ensure PR visibility
+
     def set_password(self, password):
         self.password = generate_password_hash(password)
 

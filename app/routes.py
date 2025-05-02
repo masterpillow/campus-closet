@@ -7,7 +7,8 @@ from app.models import User, Listing
 def landing():
     return render_template('index.html')
 
-# signup route
+#Minor update: added comment to trigger pull request visibility
+# signup route 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
