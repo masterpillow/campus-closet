@@ -9,3 +9,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 from app import routes
+# Create the tables (e.g., User) during app startup
+with app.app_context():
+    db.create_all()
