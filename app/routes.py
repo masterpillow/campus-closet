@@ -1,77 +1,63 @@
-from flask import render_template, request, redirect, url_for, session
-from app import app, db
-from app.models import User, Listing
+from flask import Blueprint, render_template, redirect, url_for, flash, request, session
+from flask_login import login_user, logout_user, login_required, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
+from . import db
+from .models import User, login_manager
+from .forms import LoginForm, RegisterForm
+
+bp = Blueprint('main', __name__)
 
 # 🌐 Landing page
-@app.route('/')
+@bp.route('/')
 def landing():
     return render_template('index.html')
 
-# signup route
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-
-        # Only allow SCSU emails
-        if not email.endswith('@southernct.edu'):
-            return "Only SCSU email addresses are allowed."
-
-        existing_user = User.query.filter_by(email=email).first()
-        if existing_user:
-            return "User already exists. Try logging in."
-
-        new_user = User(email=email)
-        new_user.set_password(password)
-        db.session.add(new_user)
-        db.session.commit()
-
-        return redirect(url_for('routes.login'))  # redirect to login after signup
-
-    return render_template('signup.html')
-
-# 🔐 Login route
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-
-        # Only allow SCSU emails
-        if not email.endswith('@southernct.edu'):
-            return "Only SCSU email addresses are allowed."
-
-        user = User.query.filter_by(email=email).first()
-        if user and user.check_password(password):
-            return "Login successful! "
-        else:
-            return "Invalid email or password."
-
-    return render_template('login.html')
 
 # 🏠 Home page
-@app.route('/home')
+@bp.route('/home')
 def home():
     return render_template('home.html')
 
-# ➕ Create a new listing
-@app.route('/create-listing', methods=['GET', 'POST'])
-def create_listing():
-    if request.method == 'POST':
-        title = request.form['title']
-        description = request.form['description']
-        price = float(request.form['price'])
-        category = request.form['category']
-        user_id = session.get('user_id')
-        listing = Listing(title=title, description=description, price=price, category=category, user_id=user_id)
-        db.session.add(listing)
-        db.session.commit()
-        return redirect(url_for('listings'))
-    return render_template('create_listing.html')
+#Minor update: added comment to trigger pull request visibility
+# signup route 
+@bp.route('/signup', methods=['GET', 'POST'])
+def signup():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        if not form.email.data.endswith('@southernct.edu'):
+            flash("Only SCSU email addresses are allowed.")
+            return render_template('signup.html', form=form)
 
-# 📋 View all listings
-@app.route('/listings')
-def listings():
-    all_listings = Listing.query.all()
-    return render_template('listings.html', listings=all_listings)
+        existing_user = User.query.filter_by(email=form.email.data).first()
+        if existing_user:
+            return redirect(url_for('main.login'))
+
+        hashed_password = generate_password_hash(form.password.data)
+        user = User(name = form.name.data,email=form.email.data, password=hashed_password)
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('main.login'))  # redirect to login after signup
+    
+    return render_template('signup.html', form=form)
+
+# 🔐 Login route
+@bp.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and check_password_hash(user.password, form.password.data):
+            login_user(user)
+            return redirect(url_for('main.home'))
+        else:
+            flash('Invalid username or password.')
+            return redirect(url_for('main.login'))
+        
+    return render_template('login.html', form=form)
+
+
+@bp.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('main.home'))
