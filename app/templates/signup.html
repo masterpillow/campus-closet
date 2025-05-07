@@ -11,9 +11,7 @@
     {{ form.confirm.label }} {{ form.confirm() }}<br>
     {{ form.submit() }}
     {% for error in form.password.errors %}
-       <div class="alert alert-danger input-group" role="alert">
         <span style="color: red;">{{ error }}</span>
-       </div>
        {% endfor %}
   </form>
 {% endblock %}

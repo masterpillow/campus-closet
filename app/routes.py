@@ -2,8 +2,9 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
-from .models import User, login_manager
-from .forms import LoginForm, RegisterForm
+from .models import User, ItemListing, login_manager
+from .forms import LoginForm, RegisterForm, ItemListingForm
+from datetime import datetime 
 
 bp = Blueprint('main', __name__)
 
@@ -12,11 +13,11 @@ bp = Blueprint('main', __name__)
 def landing():
     return render_template('index.html')
 
-
 # 🏠 Home page
 @bp.route('/home')
 def home():
-    return render_template('home.html')
+    listings = ItemListing.query.all()
+    return render_template('home.html', listings=listings)
 
 #Minor update: added comment to trigger pull request visibility
 # signup route 
@@ -61,3 +62,22 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('main.home'))
+
+# ➕ Create a new item listing
+@bp.route('/create_item_listing', methods=['GET', 'POST'])
+@login_required
+def create_item_listing():
+    form = ItemListingForm()
+    if form.validate_on_submit():
+        listing = ItemListing(userID=current_user.id, userName = current_user.name, title=form.title.data, description=form.description.data, category=form.category.data, condition=form.condition.data)
+        db.session.add(listing)
+        db.session.commit()
+        return redirect(url_for('main.home'))
+    return render_template('create_item_listing.html', form=form)
+
+@bp.route('/view_listing/<int:listingID>')
+def view_listing(listingID):
+    listing = ItemListing.query.get_or_404(listingID)
+    user = User.query.filter_by(id=listing.userID).first()
+
+    return render_template('view_listing.html', listing = listing, user = user)
