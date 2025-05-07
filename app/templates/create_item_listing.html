@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Create Item Listing{% endblock %}
+{% block content %}
+  <h2>Add Listing</h2>
+  <form method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.title.label }} {{ form.title() }}<br>
+    {{ form.description.label }} {{ form.description() }}<br>
+    {{ form.category.label }} {{ form.category() }}<br>
+    {{ form.condition.label }} {{ form.condition() }}<br>
+    {{ form.submit() }}
+  </form>
+{% endblock %}
