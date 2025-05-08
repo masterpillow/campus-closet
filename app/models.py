@@ -38,7 +38,8 @@ class Favorite(db.Model):
     __tablename__ = 'favorites'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    listing_id = db.Column(db.Integer, db.ForeignKey('listings.ListingID'), nullable=False)
+    listing_id = db.Column(db.Integer, db.ForeignKey('listings.listingID'), nullable=False)
 
     user = db.relationship('User', backref='favorite_listings', lazy=True)
     listing = db.relationship('ItemListing', backref='favorited_by_users', lazy=True)
+

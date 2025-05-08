@@ -16,18 +16,17 @@
 
     {% set is_favorited = false %}
     {% for fav in current_user.favorite_listings %}
-        {% if fav.listingID == listing.ListingID %}
+        {% if fav.listingID == listing.listingID %}
             {% set is_favorited = true %}
-            {% break %}
         {% endif %}
     {% endfor %}
 
     {% if is_favorited %}
-    <form action="{{ url_for('unfavorite_listing', listing_id=listing.ListingID) }}" method="post">
+    <form action="{{ url_for('main.unfavorite_listing', listing_id=listing.listingID) }}" method="post">
         <button type="submit">❌ Remove from Favorites</button>
     </form>
     {% else %}
-    <form action="{{ url_for('favorite_listing', listing_id=listing.ListingID) }}" method="post">
+    <form action="{{ url_for('main.favorite_listing', listing_id=listing.listingID) }}" method="post">
         <button type="submit">⭐ Add to Favorites</button>
     </form>
     {% endif %}

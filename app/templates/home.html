@@ -8,7 +8,8 @@
       <input type="text" name="query" placeholder="Search..." style="padding: 8px; width: 200px;">
       <button type="submit" style="padding: 8px;">Search</button>
     </form>
-    <a href="{{ url_for('view_favorites') }}" style="margin-left: 20px; font-weight: bold;">❤️ View My Favorites</a>
+    <a href="{{ url_for('main.view_favorites') }}" style="margin-left: 20px; font-weight: bold;">❤️ View My Favorites</a>
+
   </div>
 
   <table style="width: 100%; border-collapse: collapse; text-align: left; margin-top: 20px; table-layout: fixed;">
@@ -45,11 +46,11 @@
           {% endfor %}
 
           {% if is_favorited %}
-          <form action="{{ url_for('unfavorite_listing', listing_id=listing.listingID) }}" method="post">
+          <form action="{{ url_for('main.favorite_listing', listing_id=listing.listingID) }}" method="post">
             <button type="submit" title="Remove from Favorites">❌</button>
           </form>
           {% else %}
-          <form action="{{ url_for('favorite_listing', listing_id=listing.listingID) }}" method="post">
+          <form action="{{ url_for('main.unfavorite_listing', listing_id=listing.listingID) }}" method="post">
             <button type="submit" title="Add to Favorites">⭐</button>
           </form>
           {% endif %}
