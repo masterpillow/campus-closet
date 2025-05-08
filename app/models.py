@@ -34,3 +34,11 @@ class ItemListing(db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+class Favorite(db.Model):
+    __tablename__ = 'favorites'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    listing_id = db.Column(db.Integer, db.ForeignKey('listings.ListingID'), nullable=False)
+
+    user = db.relationship('User', backref='favorite_listings', lazy=True)
+    listing = db.relationship('ItemListing', backref='favorited_by_users', lazy=True)
