@@ -3,28 +3,28 @@
 <div class="main-content">
     <h2>My Favorites</h2>
 
-    {% if favorites %}
-    <table>
-        <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Action</th>
-        </tr>
-        {% for fav in favorites %}
-        <tr>
-            <td>{{ fav.listing.title }}</td>
-            <td>{{ fav.listing.description }}</td>
-            <td>
-                <form action="{{ url_for('main.unfavorite_listing', listing_id=fav.listing.listingID) }}" method="post">
-                    <button type="submit">❌ Remove from Favorites</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
+    <table style="width: 100%; border-collapse: collapse; text-align: left; margin-top: 20px;">
+        <thead>
+            <tr style="background-color: #5b9aff; color: #003366;">
+                <th style="padding: 10px; border: 1px solid black;">Title</th>
+                <th style="padding: 10px; border: 1px solid black;">Description</th>
+                <th style="padding: 10px; border: 1px solid black;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for fav in favorites %}
+            <tr>
+                <td style="padding: 10px; border: 1px solid black;">{{ fav.listing.title }}</td>
+                <td style="padding: 10px; border: 1px solid black;">{{ fav.listing.description }}</td>
+                <td style="padding: 10px; border: 1px solid black;">
+                    <form action="{{ url_for('main.unfavorite_listing', listing_id=fav.listing.listingID) }}" method="post">
+                        <button type="submit" title="Remove from Favorites">❌</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
-    {% else %}
-    <p>No favorites added yet.</p>
-    {% endif %}
 
     <br>
     <a href="{{ url_for('main.home') }}">Back to Home</a>

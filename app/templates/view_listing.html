@@ -16,7 +16,7 @@
 
     {% set is_favorited = false %}
     {% for fav in current_user.favorite_listings %}
-        {% if fav.listingID == listing.listingID %}
+        {% if fav.listing_id == listing.listingID %}
             {% set is_favorited = true %}
         {% endif %}
     {% endfor %}
