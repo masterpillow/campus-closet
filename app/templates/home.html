@@ -1,38 +1,49 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="main-content">
-        <h1 style="text-align: center;">Welcome to The Campus Closet</h1>
-        <form action="/search" method="GET" style="text-align: center; margin-bottom: 20px;">
-          <input type="text" name="query" placeholder="Search..." style="padding: 8px; width: 200px;">
-          <button type="submit" style="padding: 8px;">Search</button>
-        </form>
-        <table style="width: 100%; border-collapse: collapse; text-align: left; margin-top: 20px; table-layout: fixed; ">
-          <thead>
-            <tr style="background-color: #5b9aff; color: #003366;">
-              <th style="padding: 10px; border: 1px solid black">User ID</th>
-              <th style="padding: 10px; border: 1px solid black">Title</th>
-              <th style="padding: 10px; border: 1px solid black">Description</th>
-              <th style="padding: 10px; border: 1px solid black">Category</th>
-              <th style="padding: 10px; border: 1px solid black">Condition</th>
-              <th style="padding: 10px; border: 1px solid black">Creation Date</th>
-              <th style="padding: 10px; border: 1px solid black"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for listing in listings %}
-            <tr>
-              <td style="padding: 10px; border: 1px solid black; overflow: hidden;">{{ listing.userID }}</td>
-              <td style="padding: 10px; border: 1px solid black; overflow: hidden;">{{ listing.title }}</td>
-              <td style="padding: 10px; border: 1px solid black; overflow: hidden;">{{ listing.description }}</td>
-              <td style="padding: 10px; border: 1px solid black; overflow: hidden;">{{ listing.category }}</td>
-              <td style="padding: 10px; border: 1px solid black; overflow: hidden;">{{ listing.condition}}</td>
-              <td style="padding: 10px; border: 1px solid black; overflow: hidden;">{{ listing.created_at.strftime('%Y-%m-%d %H:%M:%S UTC') }}</td>
-              <td style="padding: 10px; border: 1px solid black; overflow: hidden;"><a href="{{ url_for('main.view_listing', listingID=listing.listingID) }}">View</a></td>
-            </tr>
-            {% endfor %}
-            <!-- Add more rows here -->
-          </tbody>
-        </table>
-      </div>
-  </div>
-  {% endblock %}
+<div class="main-content">
+  <h1 style="text-align: center;">Welcome to The Campus Closet</h1>
+  <table style="width: 100%; border-collapse: collapse; text-align: left; margin-top: 20px; table-layout: fixed;">
+    <thead>
+      <tr style="background-color: #5b9aff; color: #003366;">
+        <th style="padding: 10px; border: 1px solid black">User ID</th>
+        <th style="padding: 10px; border: 1px solid black">Title</th>
+        <th style="padding: 10px; border: 1px solid black">Description</th>
+        <th style="padding: 10px; border: 1px solid black">Category</th>
+        <th style="padding: 10px; border: 1px solid black">Condition</th>
+        <th style="padding: 10px; border: 1px solid black">Creation Date</th>
+        <th style="padding: 10px; border: 1px solid black">View</th>
+        <th style="padding: 10px; border: 1px solid black">Favorite</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for listing in listings %}
+      <tr>
+        <td style="padding: 10px; border: 1px solid black;">{{ listing.userID }}</td>
+        <td style="padding: 10px; border: 1px solid black;">{{ listing.title }}</td>
+        <td style="padding: 10px; border: 1px solid black;">{{ listing.description }}</td>
+        <td style="padding: 10px; border: 1px solid black;">{{ listing.category }}</td>
+        <td style="padding: 10px; border: 1px solid black;">{{ listing.condition }}</td>
+        <td style="padding: 10px; border: 1px solid black;">{{ listing.created_at.strftime('%Y-%m-%d %H:%M:%S UTC') }}</td>
+        <td style="padding: 10px; border: 1px solid black;">
+          <a href="{{ url_for('main.view_listing', listingID=listing.listingID) }}">View</a>
+        </td>
+        {% if current_user.is_authenticated %}
+        <td style="padding: 10px; border: 1px solid black;">
+          {% set is_favorited = listing.listingID in favorited_ids %}
+            {% if is_favorited %}
+            <form action="{{ url_for('main.unfavorite_listing', listing_id=listing.listingID) }}" method="post">
+              <button type="submit" title="Remove from Favorites">❌</button>
+            </form>
+            {% else %}
+            <form action="{{ url_for('main.favorite_listing', listing_id=listing.listingID) }}" method="post">
+              <button type="submit" title="Add to Favorites">⭐</button>
+            </form>
+            {% endif %}
+        </td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

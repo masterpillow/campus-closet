@@ -16,6 +16,8 @@ class User(UserMixin, db.Model):
     profile_picture = db.Column(db.String(255))
 
     listings = db.relationship('ItemListing', backref='user', lazy=True)
+    favorites = db.relationship('Favorite', back_populates='user', cascade="all, delete-orphan")
+
 
 class ItemListing(db.Model):
     __tablename__ = 'listings'
@@ -30,7 +32,19 @@ class ItemListing(db.Model):
     imageURL = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
 
+    favorites = db.relationship('Favorite', backref = 'Favorites', lazy = True)
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+class Favorite(db.Model):
+    __tablename__ = 'favorites'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    listing_id = db.Column(db.Integer, db.ForeignKey('listings.listingID'), nullable=False)
+
+    user = db.relationship('User', back_populates='favorites')
+    ItemListing = db.relationship('ItemListing')
 
