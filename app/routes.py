@@ -17,7 +17,12 @@ def landing():
 @bp.route('/home')
 def home():
     listings = ItemListing.query.all()
-    return render_template('home.html', listings=listings)
+
+    favorited_ids = []
+    if current_user.is_authenticated:
+        favorited_ids = [f.listing_id for f in current_user.favorites]
+
+    return render_template('home.html', listings=listings, favorited_ids=favorited_ids)
 
 # 📝 Signup
 @bp.route('/signup', methods=['GET', 'POST'])
@@ -84,7 +89,10 @@ def create_item_listing():
 def view_listing(listingID):
     listing = ItemListing.query.get_or_404(listingID)
     user = User.query.filter_by(id=listing.userID).first()
-    return render_template('view_listing.html', listing=listing, user=user)
+    favorited_ids = []
+    if current_user.is_authenticated:
+        favorited_ids = [f.listing_id for f in current_user.favorites]
+    return render_template('view_listing.html', listing=listing, user=user, favorited_ids=favorited_ids)
 
 # ⭐ Add to favorites
 @bp.route('/favorite/<int:listing_id>', methods=['POST'])

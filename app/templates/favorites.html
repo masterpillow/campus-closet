@@ -2,22 +2,34 @@
 {% block content %}
 <div class="main-content">
     <h2>My Favorites</h2>
-
+    {% if favorites %}
     <table style="width: 100%; border-collapse: collapse; text-align: left; margin-top: 20px;">
         <thead>
             <tr style="background-color: #5b9aff; color: #003366;">
-                <th style="padding: 10px; border: 1px solid black;">Title</th>
-                <th style="padding: 10px; border: 1px solid black;">Description</th>
+                <th style="padding: 10px; border: 1px solid black">User ID</th>
+                <th style="padding: 10px; border: 1px solid black">Title</th>
+                <th style="padding: 10px; border: 1px solid black">Description</th>
+                <th style="padding: 10px; border: 1px solid black">Category</th>
+                <th style="padding: 10px; border: 1px solid black">Condition</th>
+                <th style="padding: 10px; border: 1px solid black">Creation Date</th>
+                <th style="padding: 10px; border: 1px solid black">View</th>
                 <th style="padding: 10px; border: 1px solid black;">Action</th>
             </tr>
         </thead>
         <tbody>
             {% for fav in favorites %}
             <tr>
-                <td style="padding: 10px; border: 1px solid black;">{{ fav.listing.title }}</td>
-                <td style="padding: 10px; border: 1px solid black;">{{ fav.listing.description }}</td>
+                <td style="padding: 10px; border: 1px solid black;">{{ fav.ItemListing.userID }}</td>
+                <td style="padding: 10px; border: 1px solid black;">{{ fav.ItemListing.title }}</td>
+                <td style="padding: 10px; border: 1px solid black;">{{ fav.ItemListing.description }}</td>
+                <td style="padding: 10px; border: 1px solid black;">{{ fav.ItemListing.category }}</td>
+                <td style="padding: 10px; border: 1px solid black;">{{ fav.ItemListing.condition }}</td>
+                <td style="padding: 10px; border: 1px solid black;">{{ fav.ItemListing.created_at.strftime('%Y-%m-%d %H:%M:%S UTC') }}</td>
                 <td style="padding: 10px; border: 1px solid black;">
-                    <form action="{{ url_for('main.unfavorite_listing', listing_id=fav.listing.listingID) }}" method="post">
+                <a href="{{ url_for('main.view_listing', listingID=fav.ItemListing.listingID) }}">View</a>
+        </td>
+                <td style="padding: 10px; border: 1px solid black;">
+                    <form action="{{ url_for('main.unfavorite_listing', listing_id=fav.ItemListing.listingID) }}" method="post">
                         <button type="submit" title="Remove from Favorites">❌</button>
                     </form>
                 </td>
@@ -25,7 +37,9 @@
             {% endfor %}
         </tbody>
     </table>
-
+    {% else %}
+    <p>You have no favorite listings.</p>
+    {% endif %}
     <br>
     <a href="{{ url_for('main.home') }}">Back to Home</a>
 </div>

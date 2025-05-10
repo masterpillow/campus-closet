@@ -14,23 +14,18 @@
     <p><strong>Condition:</strong> {{ listing.condition }}</p><br>
     <p><strong>Email Contact:</strong> {{ user.email }}</p><br>
 
-    {% set is_favorited = false %}
-    {% for fav in current_user.favorite_listings %}
-        {% if fav.listing_id == listing.listingID %}
-            {% set is_favorited = true %}
-        {% endif %}
-    {% endfor %}
-
-    {% if is_favorited %}
-    <form action="{{ url_for('main.unfavorite_listing', listing_id=listing.listingID) }}" method="post">
-        <button type="submit">❌ Remove from Favorites</button>
-    </form>
-    {% else %}
-    <form action="{{ url_for('main.favorite_listing', listing_id=listing.listingID) }}" method="post">
-        <button type="submit">⭐ Add to Favorites</button>
-    </form>
+    {% if current_user.is_authenticated %}
+        {% set is_favorited = listing.listingID in favorited_ids %}
+            {% if is_favorited %}
+            <form action="{{ url_for('main.unfavorite_listing', listing_id=listing.listingID) }}" method="post">
+                <button type="submit">❌ Remove from Favorites</button>
+            </form>
+            {% else %}
+            <form action="{{ url_for('main.favorite_listing', listing_id=listing.listingID) }}" method="post">
+                <button type="submit">⭐ Add to Favorites</button>
+            </form>
+            {% endif %}
     {% endif %}
-
     <br>
     <a href="#">Send message</a><br><br>
     <a href="{{ url_for('main.home') }}">Back to Home</a>

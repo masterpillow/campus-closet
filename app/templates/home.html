@@ -2,15 +2,6 @@
 {% block content %}
 <div class="main-content">
   <h1 style="text-align: center;">Welcome to The Campus Closet</h1>
-
-  <div style="text-align: center; margin-bottom: 20px;">
-    <form action="/search" method="GET" style="display: inline-block;">
-      <input type="text" name="query" placeholder="Search..." style="padding: 8px; width: 200px;">
-      <button type="submit" style="padding: 8px;">Search</button>
-    </form>
-    <a href="{{ url_for('main.view_favorites') }}" style="margin-left: 20px; font-weight: bold;">❤️ View My Favorites</a>
-  </div>
-
   <table style="width: 100%; border-collapse: collapse; text-align: left; margin-top: 20px; table-layout: fixed;">
     <thead>
       <tr style="background-color: #5b9aff; color: #003366;">
@@ -36,24 +27,20 @@
         <td style="padding: 10px; border: 1px solid black;">
           <a href="{{ url_for('main.view_listing', listingID=listing.listingID) }}">View</a>
         </td>
+        {% if current_user.is_authenticated %}
         <td style="padding: 10px; border: 1px solid black;">
-          {% set is_favorited = false %}
-          {% for fav in current_user.favorite_listings %}
-            {% if fav.listing_id == listing.listingID %}
-              {% set is_favorited = true %}
+          {% set is_favorited = listing.listingID in favorited_ids %}
+            {% if is_favorited %}
+            <form action="{{ url_for('main.unfavorite_listing', listing_id=listing.listingID) }}" method="post">
+              <button type="submit" title="Remove from Favorites">❌</button>
+            </form>
+            {% else %}
+            <form action="{{ url_for('main.favorite_listing', listing_id=listing.listingID) }}" method="post">
+              <button type="submit" title="Add to Favorites">⭐</button>
+            </form>
             {% endif %}
-          {% endfor %}
-
-          {% if is_favorited %}
-          <form action="{{ url_for('main.unfavorite_listing', listing_id=listing.listingID) }}" method="post">
-            <button type="submit" title="Remove from Favorites">❌</button>
-          </form>
-          {% else %}
-          <form action="{{ url_for('main.favorite_listing', listing_id=listing.listingID) }}" method="post">
-            <button type="submit" title="Add to Favorites">⭐</button>
-          </form>
-          {% endif %}
         </td>
+        {% endif %}
       </tr>
       {% endfor %}
     </tbody>
