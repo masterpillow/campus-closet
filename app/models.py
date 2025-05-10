@@ -48,3 +48,12 @@ class Favorite(db.Model):
     user = db.relationship('User', back_populates='favorites')
     ItemListing = db.relationship('ItemListing')
 
+class Message(db.Model):
+    __tablename__ = 'messages'
+
+    messageID = db.Column(db.Integer, primary_key=True)
+    senderID = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    receiverID = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    content = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+

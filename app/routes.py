@@ -121,3 +121,9 @@ def unfavorite_listing(listing_id):
 def view_favorites():
     favorites = Favorite.query.filter_by(user_id=current_user.id).all()
     return render_template('favorites.html', favorites=favorites)
+# 📩 Messages page
+@bp.route('/messages')
+@login_required
+def messages():
+    return render_template('messages.html')
+

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Messages{% endblock %}
+{% block content %}
+  <h2>Messages</h2>
+
+  {% if current_user.is_authenticated %}
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+          <li><strong>From:</strong> {{ message.sender.name }}<br>
+              <strong>Message:</strong> {{ message.content }}<br>
+              <small>{{ message.timestamp.strftime('%Y-%m-%d %H:%M') }}</small>
+          </li>
+          <hr>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>You have no messages yet.</p>
+    {% endif %}
+  {% else %}
+    <p>Please <a href="{{ url_for('main.login') }}">login</a> to view your messages.</p>
+  {% endif %}
+{% endblock %}
