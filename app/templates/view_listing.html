@@ -25,9 +25,13 @@
                 <button type="submit">⭐ Add to Favorites</button>
             </form>
             {% endif %}
+            <br>
     {% endif %}
-    <br>
-    <a href="#">Send message</a><br><br>
+    {% if current_user.id != listing.userID %}
+    <a href="{{ url_for('main.message_user', userID=listing.userID) }}">Send message</a><br><br>
+    {% endif %}
     <a href="{{ url_for('main.home') }}">Back to Home</a>
+
 </div>
 {% endblock %}
+

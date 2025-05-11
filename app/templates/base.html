@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Website with Top and Side Navigation</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
+  {% block extra_css %}{% endblock %}
 </head>
 <body>
     <!-- Top Navigation Bar -->
@@ -12,8 +13,6 @@
       <div class="logo">SCSU Campus Closet</div>
       <div class="nav-links">
           <a href="{{ url_for('main.home') }}">Home</a>
-          <a href="#">About</a>
-          <a href="#">Contact</a>
       </div>
       <div class="auth-buttons">
         {% if current_user.is_authenticated %}
@@ -31,7 +30,6 @@
           <a href="{{ url_for('main.create_item_listing') }}">Add Listing</a>
           <a href="{{ url_for('main.messages') }}">Messages</a>
           <a href="{{ url_for('main.view_favorites') }}">Favorites</a>
-          <a href="#">Notifications</a>
           <a href="#">User Profile</a> 
       </aside>
       {% endblock %}
