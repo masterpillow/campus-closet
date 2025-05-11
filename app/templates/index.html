@@ -13,33 +13,20 @@
   <section class="hero">
     <h2>A VIRTUAL THRIFT STORE FOR SCSU STUDENTS</h2>
     <p>Donate or request clothes, dorm furniture, and supplies for free. Join the community today!</p>
-    <a href="{{ url_for('main.home') }}"><button class="cta-button">GET STARTED</button></a>
+    <a href="{{ url_for('main.login') }}"><button class="cta-button">GET STARTED</button></a>
   </section>
   <section class="features">
     <h3>FEATURES</h3>
     <div class="feature-grid">
+    
       <div class="feature-box">
-        <a href="{{ url_for('main.login') }}">
-        <div class="icon">🔒</div>
-        <h4>MY ACCOUNT</h4>
-        <p>Access Campus Closet safely with your SCSU email</p>
-        </a>
-      </div>
-      <div class="feature-box">
+        <a href="{{ url_for('main.home') }}">
         <div class="icon">👕</div>
         <h4>LISTING</h4>
         <p>Create and browse posts for items available on campus</p>
+        </a>
       </div>
-      <div class="feature-box">
-        <div class="icon">💬</div>
-        <h4>MESSAGING</h4>
-        <p>Message users directly to coordinate exchanges</p>
-      </div>
-      <div class="feature-box">
-        <div class="icon">✅</div>
-        <h4>MODERATION</h4>
-        <p>Listings and activity are monitored for safety</p>
-      </div>
+      
     </div>
   </section>
 

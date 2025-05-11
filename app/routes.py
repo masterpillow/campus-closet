@@ -2,8 +2,8 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
-from .models import User, ItemListing, login_manager, Favorite
-from .forms import LoginForm, RegisterForm, ItemListingForm
+from .models import User, ItemListing, login_manager, Favorite, Message
+from .forms import LoginForm, RegisterForm, ItemListingForm, MessageForm
 from datetime import datetime 
 
 bp = Blueprint('main', __name__)
@@ -13,7 +13,7 @@ bp = Blueprint('main', __name__)
 def landing():
     return render_template('index.html')
 
-# 🏠 Home page
+# Home page
 @bp.route('/home')
 def home():
     listings = ItemListing.query.all()
@@ -24,7 +24,7 @@ def home():
 
     return render_template('home.html', listings=listings, favorited_ids=favorited_ids)
 
-# 📝 Signup
+# Signup
 @bp.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = RegisterForm()
@@ -44,7 +44,7 @@ def signup():
         return redirect(url_for('main.login'))
     return render_template('signup.html', form=form)
 
-# 🔐 Login
+# Login
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -58,14 +58,14 @@ def login():
             return redirect(url_for('main.login'))
     return render_template('login.html', form=form)
 
-# 🚪 Logout
+# Logout
 @bp.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('main.home'))
 
-# ➕ Create listing
+# Create listing
 @bp.route('/create_item_listing', methods=['GET', 'POST'])
 @login_required
 def create_item_listing():
@@ -84,7 +84,7 @@ def create_item_listing():
         return redirect(url_for('main.home'))
     return render_template('create_item_listing.html', form=form)
 
-# 👁️ View listing
+# View listing
 @bp.route('/view_listing/<int:listingID>')
 def view_listing(listingID):
     listing = ItemListing.query.get_or_404(listingID)
@@ -94,7 +94,7 @@ def view_listing(listingID):
         favorited_ids = [f.listing_id for f in current_user.favorites]
     return render_template('view_listing.html', listing=listing, user=user, favorited_ids=favorited_ids)
 
-# ⭐ Add to favorites
+# Add to favorites
 @bp.route('/favorite/<int:listing_id>', methods=['POST'])
 @login_required
 def favorite_listing(listing_id):
@@ -105,7 +105,7 @@ def favorite_listing(listing_id):
         db.session.commit()
     return redirect(request.referrer or url_for('main.home'))
 
-# ❌ Remove from favorites
+# Remove from favorites
 @bp.route('/unfavorite/<int:listing_id>', methods=['POST'])
 @login_required
 def unfavorite_listing(listing_id):
@@ -115,9 +115,44 @@ def unfavorite_listing(listing_id):
         db.session.commit()
     return redirect(request.referrer or url_for('main.view_favorites'))
 
-# 📄 View all favorites
+# View all favorites
 @bp.route('/favorites')
 @login_required
 def view_favorites():
     favorites = Favorite.query.filter_by(user_id=current_user.id).all()
     return render_template('favorites.html', favorites=favorites)
+
+# Messages page
+@bp.route('/messages')
+@login_required
+def messages():
+    messages = Message.query.filter_by(receiverID=current_user.id).order_by(Message.timestamp.desc()).all()
+    return render_template('messages.html', messages = messages)
+
+@bp.route('/message_user/<int:userID>', methods=['GET', 'POST'])
+@login_required
+def message_user(userID):
+    user = User.query.filter_by(id=userID).first_or_404()
+    message = None 
+    form = MessageForm()
+    if form.validate_on_submit():
+        if not user:
+            message = "User not found." 
+        else:
+            msg = Message(senderID=current_user.id, receiverID=user.id, content=form.body.data)
+            db.session.add(msg)
+            db.session.commit()
+            flash('Your message has been sent.')
+            return redirect(url_for('main.messages'))
+        
+    return render_template('message_user.html', form=form, message=message, user=user)
+
+# View message 
+@bp.route('/view_message/<int:messageID>')
+def view_message(messageID):
+    message = Message.query.get_or_404(messageID)
+
+    return render_template('view_message.html', message = message)
+
+#  email: muneerb1
+# password: ssbb

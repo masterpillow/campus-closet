@@ -18,17 +18,17 @@
     <tbody>
       {% for listing in listings %}
       <tr>
-        <td style="padding: 10px; border: 1px solid black;">{{ listing.userID }}</td>
-        <td style="padding: 10px; border: 1px solid black;">{{ listing.title }}</td>
-        <td style="padding: 10px; border: 1px solid black;">{{ listing.description }}</td>
-        <td style="padding: 10px; border: 1px solid black;">{{ listing.category }}</td>
-        <td style="padding: 10px; border: 1px solid black;">{{ listing.condition }}</td>
-        <td style="padding: 10px; border: 1px solid black;">{{ listing.created_at.strftime('%Y-%m-%d %H:%M:%S UTC') }}</td>
-        <td style="padding: 10px; border: 1px solid black;">
+        <td style="padding: 10px; border: 1px solid black">{{ listing.userID }}</td>
+        <td style="padding: 10px; border: 1px solid black">{{ listing.title }}</td>
+        <td style="padding: 10px; border: 1px solid black">{{ listing.description }}</td>
+        <td style="padding: 10px; border: 1px solid black">{{ listing.category }}</td>
+        <td style="padding: 10px; border: 1px solid black">{{ listing.condition }}</td>
+        <td style="padding: 10px; border: 1px solid black">{{ listing.created_at.strftime('%Y-%m-%d %H:%M UTC') }}</td>
+        <td style="padding: 10px; border: 1px solid black">
           <a href="{{ url_for('main.view_listing', listingID=listing.listingID) }}">View</a>
         </td>
-        {% if current_user.is_authenticated %}
         <td style="padding: 10px; border: 1px solid black;">
+        {% if current_user.is_authenticated %}
           {% set is_favorited = listing.listingID in favorited_ids %}
             {% if is_favorited %}
             <form action="{{ url_for('main.unfavorite_listing', listing_id=listing.listingID) }}" method="post">

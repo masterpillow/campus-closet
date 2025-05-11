@@ -1,12 +1,33 @@
 {% extends 'base.html' %}
 {% block title %}Login{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}" />
+{% endblock %}
 {% block navbar %}{% endblock %}
 {% block content %}
-  <h2>Login</h2>
-  <form method="POST">
-    {{ form.hidden_tag() }}
-    {{ form.email.label }} {{ form.email() }}<br>
-    {{ form.password.label }} {{ form.password() }}<br>
-    {{ form.submit() }}
-  </form>
+  <div class="login-container">
+  <div class="login-box">
+    <h2>Login</h2>
+    <form method="POST">
+      {{ form.hidden_tag() }}
+
+      <div class="input-group">
+        {{ form.email.label(class="label") }}
+        {{ form.email(class="input-field", placeholder="Enter your email") }}
+      </div>
+
+      <div class="input-group">
+        {{ form.password.label(class="label") }}
+        {{ form.password(class="input-field", placeholder="Enter your password") }}
+      </div>
+
+      <div class="form-action">
+        {{ form.submit(class="btn-submit") }}
+      </div>
+    </form>
+    <p class="register-link">
+      Don't have an account? <a href="{{ url_for('main.signup') }}">Sign up</a>
+    </p>
+  </div>
+</div>
 {% endblock %}

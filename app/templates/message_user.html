@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Send Message{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='messages.css') }}" />
+{% endblock %}
+{% block content %}
+<div class="message-container">
+    <h2>Sending message to {{ user.name }}</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.body.label }}
+            {{ form.body(rows=6) }}
+        </div>
+        <button type="submit">Send</button>
+        <a href="{{ url_for('main.home') }}" class="cancel-link">Cancel</a>
+        {% if message %}
+            <div class="error-message">{{ message }}</div>
+        {% endif %}
+    </form>
+</div>
+{% endblock %}

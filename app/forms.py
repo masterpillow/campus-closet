@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, FloatField, IntegerField, PasswordField, SubmitField
+from wtforms import StringField, FloatField, IntegerField, PasswordField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, EqualTo, Length, NumberRange
 
 class LoginForm(FlaskForm):
@@ -20,3 +20,7 @@ class ItemListingForm(FlaskForm):
     category = StringField('Category', validators=[DataRequired()])
     condition = StringField('Condition', validators=[DataRequired()])
     submit = SubmitField('Create Listing')
+
+class MessageForm(FlaskForm):
+    body = TextAreaField('Message', validators=[DataRequired(), Length(min=1, max=1000)])
+    submit = SubmitField('Send')

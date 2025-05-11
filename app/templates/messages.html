@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Messages{% endblock %}
+{% block content %}
+<div class="main-content">
+  <h2>Message Inbox</h2>
+  {% if current_user.is_authenticated %}
+    {% if messages %}
+    <table style="width: 100%; border-collapse: collapse; text-align: left; margin-top: 20px;">
+        <thead>
+            <tr style="background-color: #5b9aff; color: #003366;">
+                <th style="padding: 10px; border: 1px solid black">Name</th>
+                <th style="padding: 10px; border: 1px solid black; width: 100px;">User ID</th>
+                <th style="padding: 10px; border: 1px solid black">Content</th>
+                <th style="padding: 10px; border: 1px solid black">Time Received</th>
+                <th style="padding: 10px; border: 1px solid black">View</th>
+            </tr>
+        </thead>
+        <tbody>
+          {% for message in messages %}
+            <tr>
+                <td style="padding: 10px; border: 1px solid black;">{{ message.sender.name }}</td>
+                <td style="padding: 10px; border: 1px solid black; text-align: center">{{ message.sender.id }}</td>
+                <td style="padding: 10px; border: 1px solid black;">{{ message.content }}</td>
+                <td style="padding: 10px; border: 1px solid black;">{{ message.timestamp.strftime('%Y-%m-%d %H:%M UTC') }}</td>
+                <td style="padding: 10px; border: 1px solid black">
+                  <a href="{{ url_for('main.view_message', messageID=message.messageID) }}">View</a>
+                </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+      <p>You have no messages yet.</p>
+    {% endif %}
+  {% else %}
+    <p>Please <a href="{{ url_for('main.login') }}">login</a> to view your messages.</p>
+  {% endif %}
+</div>
+{% endblock %}
+

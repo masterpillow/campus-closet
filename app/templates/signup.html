@@ -1,17 +1,48 @@
 {% extends 'base.html' %}
 {% block title %}Register{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='signup.css') }}" />
+{% endblock %}
 {% block navbar %}{% endblock %}
+
 {% block content %}
-  <h2>Register</h2>
-  <form method="POST">
-    {{ form.hidden_tag() }}
-    {{ form.name.label }} {{ form.name() }}<br>
-    {{ form.email.label }} {{ form.email() }}<br>
-    {{ form.password.label }} {{ form.password() }}<br>
-    {{ form.confirm.label }} {{ form.confirm() }}<br>
-    {{ form.submit() }}
-    {% for error in form.password.errors %}
-        <span style="color: red;">{{ error }}</span>
-       {% endfor %}
-  </form>
+  <div class="container">
+    <h2 class="heading">Create an Account</h2>
+
+    <form method="POST" class="form-container">
+      {{ form.hidden_tag() }}
+      
+      <div class="form-group">
+        <label for="{{ form.name.id }}">{{ form.name.label }}</label>
+        {{ form.name(class="form-input") }}
+      </div>
+      
+      <div class="form-group">
+        <label for="{{ form.email.id }}">{{ form.email.label }}</label>
+        {{ form.email(class="form-input") }}
+      </div>
+      
+      <div class="form-group">
+        <label for="{{ form.password.id }}">{{ form.password.label }}</label>
+        {{ form.password(class="form-input") }}
+      </div>
+      
+      <div class="form-group">
+        <label for="{{ form.confirm.id }}">{{ form.confirm.label }}</label>
+        {{ form.confirm(class="form-input") }}
+      </div>
+
+      {% for error in form.password.errors %}
+        <div class="error-message">{{ error }}</div>
+      {% endfor %}
+
+      <div class="form-group">
+        {{ form.submit(class="submit-btn") }}
+      </div>
+    </form>
+
+    <div class="login-link">
+      <p>Already have an account? <a href="{{ url_for('main.login') }}">Login here</a></p>
+    </div>
+  </div>
 {% endblock %}
