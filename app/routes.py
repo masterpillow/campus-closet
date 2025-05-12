@@ -184,16 +184,21 @@ def message_user(userID):
         
     return render_template('message_user.html', form=form, message=message, user=user)
 
-# View message 
+# View details of a particular message
 @bp.route('/view_message/<int:messageID>')
 def view_message(messageID):
     message = Message.query.get_or_404(messageID)
 
     return render_template('view_message.html', message = message)
 
-#  email: muneerb1
-# password: ssbb
+# View details of a particular message
+@login_required
+@bp.route('/user_profile>')
+def user_profile():
+    return render_template('user_profile.html')
 
+
+# Admin dashboard
 @bp.route("/admin")
 @login_required
 def admin_dashboard(): 
