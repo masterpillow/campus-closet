@@ -10,6 +10,7 @@ By Reynaldo, Sana, Giovanna, Ayin, Max (Group 3)
 - Messaging – In-app direct messaging system to facilitate coordination between users.
 - Favorites - Allows user to favorite and store listings in a 'Favorites list'.
 - User Profile - User can the details of their account.
+- Administrator Dashboard - Whitelist emails can access the app statistics through a dashboard after being verified as an administrator once submitting login form.
 
 ### Prerequisites
 - Python 3.10+
