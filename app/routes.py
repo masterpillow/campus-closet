@@ -1,3 +1,8 @@
+# routes.py
+# This file defines the routes (URL endpoints) for the application
+# It includes logic for user registration, login, messaging, favorites, item listings, and admin dashboard access
+# Uses Flask Blueprints to modularize routes 
+
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -9,11 +14,17 @@ from datetime import datetime
 bp = Blueprint('main', __name__)
 
 # 🌐 Landing page
+
+# Route decorator binds a URL path to the following function
+# View function that handles the request and returns a response 
 @bp.route('/')
 def landing():
     return render_template('index.html')
 
 # Home page
+
+# Route decorator binds a URL path to the following function
+# View function that handles the request and returns a response
 @bp.route('/home')
 def home():
     listings = ItemListing.query.all()
@@ -25,6 +36,8 @@ def home():
     return render_template('home.html', listings=listings, favorited_ids=favorited_ids)
 
 # Signup
+# Renders and processes the registration form
+# Validates SCSU email, checks for duplicates, creates a new user
 @bp.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = RegisterForm()
@@ -37,14 +50,30 @@ def signup():
         if existing_user:
             return redirect(url_for('main.login'))
 
+        admin_emails = [
+            "mastelarig1@southernct.edu",
+            "garciar17@southernct.edu",
+            "madhua1@southernct.edu",
+            "muneerb1@southernct.edu",
+            "musialm5@southernct.edu",
+            "wrightj16@southernct.edu"
+        ]
+        is_admin = form.email.data in admin_emails
+        
         hashed_password = generate_password_hash(form.password.data)
-        user = User(name=form.name.data, email=form.email.data, password=hashed_password)
+        user = User(
+            name=form.name.data, 
+            email=form.email.data, 
+            password=hashed_password,
+            is_admin=is_admin)
         db.session.add(user)
         db.session.commit()
         return redirect(url_for('main.login'))
     return render_template('signup.html', form=form)
 
 # Login
+# Authenticates user credentials and logs user in
+# Used hashed password check and redirects on success or failure 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -59,6 +88,7 @@ def login():
     return render_template('login.html', form=form)
 
 # Logout
+# Logs oyt current user and clears session 
 @bp.route('/logout')
 @login_required
 def logout():
@@ -66,6 +96,8 @@ def logout():
     return redirect(url_for('main.home'))
 
 # Create listing
+# Form for submitting new item listings
+# Saves listings metadata to database if validated 
 @bp.route('/create_item_listing', methods=['GET', 'POST'])
 @login_required
 def create_item_listing():
@@ -116,6 +148,7 @@ def unfavorite_listing(listing_id):
     return redirect(request.referrer or url_for('main.view_favorites'))
 
 # View all favorites
+# Displays listings the current user has favorited 
 @bp.route('/favorites')
 @login_required
 def view_favorites():
@@ -123,6 +156,7 @@ def view_favorites():
     return render_template('favorites.html', favorites=favorites)
 
 # Messages page
+# Shows all received messages for the logged-in user 
 @bp.route('/messages')
 @login_required
 def messages():
@@ -156,3 +190,14 @@ def view_message(messageID):
 
 #  email: muneerb1
 # password: ssbb
+
+@bp.route("/admin")
+@login_required
+def admin_dashboard(): 
+    if not current_user.is_admin:
+        flash("Unauthorized access.")
+        return redirect(url_for('main.home'))
+
+    users = User.query.all()
+    items = ItemListing.query.all()
+    return render_template("admin_dashboard.html", users=users, items=items)
