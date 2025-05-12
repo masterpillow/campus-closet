@@ -35,7 +35,7 @@
           <a href="{{ url_for('main.create_item_listing') }}">Add Listing</a>
           <a href="{{ url_for('main.messages') }}">Messages</a>
           <a href="{{ url_for('main.view_favorites') }}">Favorites</a>
-          <a href="#">User Profile</a> 
+          <a href="{{ url_for('main.user_profile') }}">User Profile</a> 
           {% if current_user.is_authenticated and current_user.is_admin %}
             <a href="{{ url_for('main.admin_dashboard') }}">Admin Dashboard</a>
           {% endif %}

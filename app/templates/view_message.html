@@ -3,14 +3,11 @@
 {% block content %}
 <div class="main-content">
     <h2>Message Details</h2><br>
-
     <p><strong>Sender Name:</strong> {{ message.sender.name }}</p><br>
     <p><strong>Sender ID:</strong> {{ message.sender.id }}</p><br>
     <p><strong>Message Received:</strong> {{ message.timestamp.strftime('%Y-%m-%d %H:%M UTC') }}</p><br>
     <p><strong>Message Content:</strong> {{ message.content }}</p><br>
-
     <a href="{{ url_for('main.message_user', userID=message.sender.id) }}">Reply</a><br><br>
-
 </div>
 {% endblock %}
 

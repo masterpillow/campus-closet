@@ -13,7 +13,6 @@ from datetime import datetime
 
 bp = Blueprint('main', __name__)
 
-# 🌐 Landing page
 
 # Route decorator binds a URL path to the following function
 # View function that handles the request and returns a response 
@@ -22,14 +21,13 @@ def landing():
     return render_template('index.html')
 
 # Home page
-
 # Route decorator binds a URL path to the following function
 # View function that handles the request and returns a response
 @bp.route('/home')
 def home():
     listings = ItemListing.query.all()
 
-    favorited_ids = []
+    favorited_ids = [] 
     if current_user.is_authenticated:
         favorited_ids = [f.listing_id for f in current_user.favorites]
 
@@ -42,14 +40,17 @@ def home():
 def signup():
     form = RegisterForm()
     if form.validate_on_submit():
+        # Only accepts southern emails.
         if not form.email.data.endswith('@southernct.edu'):
             flash("Only SCSU email addresses are allowed.")
             return render_template('signup.html', form=form)
 
-        existing_user = User.query.filter_by(email=form.email.data).first()
+        # Redirects the user to the login page if the user email already is in use
+        existing_user = User.query.filter_by(email=form.email.data).first() 
         if existing_user:
             return redirect(url_for('main.login'))
 
+        # Set of emails that are keyed in for the role of an admin
         admin_emails = [
             "mastelarig1@southernct.edu",
             "garciar17@southernct.edu",
@@ -163,6 +164,8 @@ def messages():
     messages = Message.query.filter_by(receiverID=current_user.id).order_by(Message.timestamp.desc()).all()
     return render_template('messages.html', messages = messages)
 
+# Sending message route
+# Promt the user to enter a message to send to the user of a particular listing
 @bp.route('/message_user/<int:userID>', methods=['GET', 'POST'])
 @login_required
 def message_user(userID):
@@ -170,7 +173,7 @@ def message_user(userID):
     message = None 
     form = MessageForm()
     if form.validate_on_submit():
-        if not user:
+        if not user: 
             message = "User not found." 
         else:
             msg = Message(senderID=current_user.id, receiverID=user.id, content=form.body.data)
@@ -181,16 +184,21 @@ def message_user(userID):
         
     return render_template('message_user.html', form=form, message=message, user=user)
 
-# View message 
+# View details of a particular message
 @bp.route('/view_message/<int:messageID>')
 def view_message(messageID):
     message = Message.query.get_or_404(messageID)
 
     return render_template('view_message.html', message = message)
 
-#  email: muneerb1
-# password: ssbb
+# View details of a particular message
+@login_required
+@bp.route('/user_profile>')
+def user_profile():
+    return render_template('user_profile.html')
 
+
+# Admin dashboard
 @bp.route("/admin")
 @login_required
 def admin_dashboard(): 
