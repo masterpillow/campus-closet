@@ -1,3 +1,8 @@
+# config.py
+# This file holds configuration variables for the Flask application
+# The SECRET_KEY is used for securely signing session cookies and forms
+# SQLALCHEMY_DATABASE_URI defines the location oof the SQLite database file
+
 import os
 
 class Config:

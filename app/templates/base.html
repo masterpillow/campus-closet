@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Website with Top and Side Navigation</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
+
+  {% if request.path =='/admin' %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+  {% endif %}
+
   {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -31,6 +36,9 @@
           <a href="{{ url_for('main.messages') }}">Messages</a>
           <a href="{{ url_for('main.view_favorites') }}">Favorites</a>
           <a href="#">User Profile</a> 
+          {% if current_user.is_authenticated and current_user.is_admin %}
+            <a href="{{ url_for('main.admin_dashboard') }}">Admin Dashboard</a>
+          {% endif %}
       </aside>
       {% endblock %}
       <hr>
@@ -46,3 +54,4 @@
     {% block content %}{% endblock %}
 </body>
 </html>
+
