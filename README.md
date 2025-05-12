@@ -18,8 +18,8 @@ By Reynaldo, Sana, Giovanna, Ayin, Max (Group 3)
 - Virtual environment tool (recommended)
 
 ### GCP Configuration
-URL for App: http://34.46.250.126:8080
-VM Instance External IP Address: 34.46.250.126
+- URL for App: http://34.46.250.126:8080
+- VM Instance External IP Address: 34.46.250.126
 
 ### Installation
 ```bash
