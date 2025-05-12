@@ -37,6 +37,6 @@ pip install -r requirements.txt
 # Run the application
 python run.py
 
-Live Demo Link (GCP): 
+
 
 
