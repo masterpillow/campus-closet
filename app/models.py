@@ -64,7 +64,7 @@ class Favorite(db.Model):
     listing_id = db.Column(db.Integer, db.ForeignKey('listings.listingID'), nullable=False)
 
     user = db.relationship('User', back_populates='favorites')
-    ItemListing = db.relationship('ItemListing')
+    ItemListing = db.relationship('ItemListing', back_populates='favorites')
 
 # Database model definition with fields and constraints
 # Message model: stores direct messages between users
