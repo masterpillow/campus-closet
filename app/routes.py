@@ -192,8 +192,8 @@ def view_message(messageID):
     return render_template('view_message.html', message = message)
 
 # View details of a particular message
-@login_required
 @bp.route('/user_profile>')
+@login_required
 def user_profile():
     return render_template('user_profile.html')
 
